@@ -22,7 +22,7 @@ namespace DataTierWebServer.Controllers
             _context = context;
         }
 
-        // GET: api/users
+        // GET: api/userprofile
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserProfile>>> GetUserProfile()
         {
@@ -33,15 +33,15 @@ namespace DataTierWebServer.Controllers
             return await _context.UserProfiles.ToListAsync();
         }
 
-        // GET: api/users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserProfile>> GetUserProfile(int id)
+        // GET: api/userprofile/5
+        [HttpGet("{name}")]
+        public async Task<ActionResult<UserProfile>> GetUserProfileByName(string name)
         {
           if (_context.UserProfiles == null)
           {
               return NotFound();
           }
-            var userProfile = await _context.UserProfiles.FindAsync(id);
+            var userProfile = await _context.UserProfiles.FindAsync(name);
 
             if (userProfile == null)
             {
@@ -51,7 +51,26 @@ namespace DataTierWebServer.Controllers
             return userProfile;
         }
 
-        // PUT: api/users/5
+
+        // GET: api/userprofile/5
+        [HttpGet("{email}")]
+        public async Task<ActionResult<UserProfile>> GetUserProfileByEmail(string email)
+        {
+            if (_context.UserProfiles == null)
+            {
+                return NotFound();
+            }
+            var userProfile = await _context.UserProfiles.FindAsync(email);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            return userProfile;
+        }
+
+        // PUT: api/userprofile/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserProfile(int id, UserProfile userProfile)
@@ -82,7 +101,7 @@ namespace DataTierWebServer.Controllers
             return NoContent();
         }
 
-        // POST: api/users
+        // POST: api/userprofile
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<UserProfile>> PostUserProfile(UserProfile userProfile)
@@ -99,7 +118,7 @@ namespace DataTierWebServer.Controllers
             return CreatedAtAction("GetUserProfile", new { id = userProfile.Id }, userProfile);
         }
 
-        // DELETE: api/users/5
+        // DELETE: api/userprofile/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserProfile(int id)
         {
