@@ -13,27 +13,31 @@ namespace DataTierWebServer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Students",
+                name: "UserProfiles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Age = table.Column<int>(type: "INTEGER", nullable: false)
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    Address = table.Column<string>(type: "TEXT", nullable: false),
+                    PhoneNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.PrimaryKey("PK_UserProfiles", x => x.Id);
                 });
 
             migrationBuilder.InsertData(
-                table: "Students",
-                columns: new[] { "Id", "Age", "Name" },
+                table: "UserProfiles",
+                columns: new[] { "Id", "Address", "Email", "Name", "Password", "PhoneNumber", "ProfilePictureUrl" },
                 values: new object[,]
                 {
-                    { 1, 20, "Sajib" },
-                    { 2, 30, "Mistry" },
-                    { 3, 40, "Mike" }
+                    { 1, "1 Street Suburb", "Sajib@email.com", "Sajib", "Sajib123", 1234567, "SomeImage" },
+                    { 2, "2 Street Suburb", "Mistry@email.com", "Mistry", "Mistry123", 2345678, "SomeImage" },
+                    { 3, "3 Street Suburb", "Mike@email.com", "Mike", "Mike123", 3456789, "SomeImage" }
                 });
         }
 
@@ -41,7 +45,7 @@ namespace DataTierWebServer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Students");
+                name: "UserProfiles");
         }
     }
 }

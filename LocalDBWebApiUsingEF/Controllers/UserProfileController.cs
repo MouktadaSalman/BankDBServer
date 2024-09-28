@@ -7,60 +7,61 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataTierWebServer.Models;
 using DataTierWebServer.Data;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace DataTierWebServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class UserProfileController : ControllerBase
     {
         private readonly DBManager _context;
 
-        public StudentsController(DBManager context)
+        public UserProfileController(DBManager context)
         {
             _context = context;
         }
 
-        // GET: api/Students
+        // GET: api/users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserProfile>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<UserProfile>>> GetUserProfile()
         {
-          if (_context.Students == null)
+          if (_context.UserProfiles == null)
           {
               return NotFound();
           }
-            return await _context.Students.ToListAsync();
+            return await _context.UserProfiles.ToListAsync();
         }
 
-        // GET: api/Students/5
+        // GET: api/users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserProfile>> GetStudent(int id)
+        public async Task<ActionResult<UserProfile>> GetUserProfile(int id)
         {
-          if (_context.Students == null)
+          if (_context.UserProfiles == null)
           {
               return NotFound();
           }
-            var student = await _context.Students.FindAsync(id);
+            var userProfile = await _context.UserProfiles.FindAsync(id);
 
-            if (student == null)
+            if (userProfile == null)
             {
                 return NotFound();
             }
 
-            return student;
+            return userProfile;
         }
 
-        // PUT: api/Students/5
+        // PUT: api/users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent(int id, UserProfile student)
+        public async Task<IActionResult> PutUserProfile(int id, UserProfile userProfile)
         {
-            if (id != student.Id)
+            if (id != userProfile.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(student).State = EntityState.Modified;
+            _context.Entry(userProfile).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +69,7 @@ namespace DataTierWebServer.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentExists(id))
+                if (!UserProfileExists(id))
                 {
                     return NotFound();
                 }
@@ -81,44 +82,46 @@ namespace DataTierWebServer.Controllers
             return NoContent();
         }
 
-        // POST: api/Students
+        // POST: api/users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserProfile>> PostStudent(UserProfile student)
+        public async Task<ActionResult<UserProfile>> PostUserProfile(UserProfile userProfile)
         {
-          if (_context.Students == null)
+          if (_context.UserProfiles == null)
           {
-              return Problem("Entity set 'DBManager.Students'  is null.");
+              return Problem("Entity set 'DBManager.UserProfiles'  is null.");
           }
-            _context.Students.Add(student);
+            
+
+            _context.UserProfiles.Add(userProfile);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudent", new { id = student.Id }, student);
+            return CreatedAtAction("GetUserProfile", new { id = userProfile.Id }, userProfile);
         }
 
-        // DELETE: api/Students/5
+        // DELETE: api/users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent(int id)
+        public async Task<IActionResult> DeleteUserProfile(int id)
         {
-            if (_context.Students == null)
+            if (_context.UserProfiles == null)
             {
                 return NotFound();
             }
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
+            var userProfile = await _context.UserProfiles.FindAsync(id);
+            if (userProfile == null)
             {
                 return NotFound();
             }
 
-            _context.Students.Remove(student);
+            _context.UserProfiles.Remove(userProfile);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool StudentExists(int id)
+        private bool UserProfileExists(int id)
         {
-            return (_context.Students?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.UserProfiles?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
