@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DataTierWebServer.Models;
 using DataTierWebServer.Data;
 using Microsoft.CodeAnalysis.Scripting;
+using System.Xml.Linq;
 
 namespace DataTierWebServer.Controllers
 {
@@ -34,14 +35,14 @@ namespace DataTierWebServer.Controllers
         }
 
         // GET: api/userprofile/5
-        [HttpGet("{name}")]
+        [HttpGet("byname/{name}")]
         public async Task<ActionResult<UserProfile>> GetUserProfileByName(string name)
         {
           if (_context.UserProfiles == null)
           {
               return NotFound();
           }
-            var userProfile = await _context.UserProfiles.FindAsync(name);
+            var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.Name == name);
 
             if (userProfile == null)
             {
@@ -53,14 +54,14 @@ namespace DataTierWebServer.Controllers
 
 
         // GET: api/userprofile/5
-        [HttpGet("{email}")]
+        [HttpGet("byemail/{email}")]
         public async Task<ActionResult<UserProfile>> GetUserProfileByEmail(string email)
         {
             if (_context.UserProfiles == null)
             {
                 return NotFound();
             }
-            var userProfile = await _context.UserProfiles.FindAsync(email);
+            var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.Email == email);
 
             if (userProfile == null)
             {
