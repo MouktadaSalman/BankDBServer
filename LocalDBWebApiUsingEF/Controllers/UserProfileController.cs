@@ -71,9 +71,20 @@ namespace DataTierWebServer.Controllers
             return userProfile;
         }
 
-        // PUT: api/userprofile/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        // PUT: api/userprofile/1
+        /* BODY -> row -> Enter new updated userprofile for the id
+         * {
+            "id": 1, 
+            "name": "Sajib Updated",
+            "email": "sajib_updated@email.com",
+            "address": "1 Street Suburb Updated",
+            "phoneNumber": 9876543,
+            "profilePictureUrl": "UpdatedImageUrl",
+            "password": "UpdatedPassword"
+        }
+        */
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
         public async Task<IActionResult> PutUserProfile(int id, UserProfile userProfile)
         {
             if (id != userProfile.Id)

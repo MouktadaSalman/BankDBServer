@@ -81,7 +81,7 @@
             balance = GetBalance();
         }
 
-        public int NumOfAccounts()
+        public int NumOfUserProfiles()
         {
             return _random.Next(10, 100);
         }
