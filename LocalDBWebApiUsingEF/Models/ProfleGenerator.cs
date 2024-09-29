@@ -5,7 +5,7 @@ namespace DataTierWebServer.Models
 {
     public class ProfleGenerator
     {
-        private static readonly Random _random = new Random();
+        private static readonly Random _random = new Random(1234);
         private static HashSet<string> emailStrings = new HashSet<string>();
         private static HashSet<string> usernameStrings = new HashSet<string>();
         private static HashSet<string> passwordStrings = new HashSet<string>();

@@ -3,7 +3,7 @@
     public class AccountGenerator
     {
 
-        private static Random _random = new Random();
+        private static Random _random = new Random(1234);
 
 
         private readonly UserProfile _userProfile;

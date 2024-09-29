@@ -50,8 +50,7 @@ namespace DataTierWebServer.Controllers
                 return NotFound();
             }
             return account;
-        }
-        
+        }        
 
         [HttpGet("history/{acctNo}")]
         public async Task<ActionResult<List<string>>> GetAccountHistory(uint acctNo)
@@ -85,10 +84,13 @@ namespace DataTierWebServer.Controllers
             {
                 return NotFound();
             }
+
             account.Balance += amount;
             var historyEntry = new UserHistory
             {
-                HistoryString = $"Balance updated by {amount} on {DateTime.Now}"
+                AccountId = account.AcctNo,
+                HistoryString = $"Balance updated by {amount} on {DateTime.Now} +   " +
+                $"Old Balance: {account.Balance - amount} ----- New Balance: {account.Balance}"
             };
             account.History.Add(historyEntry);
 

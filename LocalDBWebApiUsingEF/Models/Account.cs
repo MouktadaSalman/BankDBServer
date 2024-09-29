@@ -41,7 +41,8 @@ namespace DataTierWebServer.Models
     public class UserHistory
     {
         [Key]
-        public int transaction { get; set; }
-        public string? HistoryString { get; set; }
+        public int Transaction { get; set; }
+        public uint AccountId { get; set; }
+        public string? HistoryString { get; set; }        
     }
 }
