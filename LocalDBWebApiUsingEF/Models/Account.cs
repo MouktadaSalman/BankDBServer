@@ -5,14 +5,13 @@ namespace DataTierWebServer.Models
     public class Account
     {
         [Key]
-        public uint AcctNo { get; set; }
+        public int AcctNo { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public uint Age { get; set; }
         public int Balance { get; set; }
-        public string Address { get; set; }
-        
+        public string Address { get; set; }        
         
         public Account()
         {
@@ -24,7 +23,8 @@ namespace DataTierWebServer.Models
             Balance = 0;
             Address = string.Empty;
         }
-        public Account(uint acctNo, string firstName, string lastName,string email, uint age, int balance, string address)
+
+        public Account(int acctNo, string firstName, string lastName,string email, uint age, int balance, string address)
         {
             AcctNo = acctNo;
             FirstName = firstName;
@@ -34,6 +34,5 @@ namespace DataTierWebServer.Models
             Balance = balance;
             Address = address;
         }
-
     }
 }

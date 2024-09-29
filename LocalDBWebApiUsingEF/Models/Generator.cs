@@ -1,8 +1,12 @@
-﻿namespace DataTierWebServer.Models
+﻿using System.Text;
+using System;
+
+namespace DataTierWebServer.Models
 {
     public class Generator
     {
-        private readonly Random _random = new Random();
+        private static readonly Random _random = new Random();
+        private static HashSet<string> generatedStrings = new HashSet<string>();
 
         // Lists of actual names
         private readonly List<string> _firstNames = new List<string>
@@ -45,6 +49,29 @@
             return _firstNames[_random.Next(_firstNames.Count)];
         }
 
+        public static string GetPassword(int length)
+        {
+            string randomString;
+            
+            do
+            {
+                randomString = GenerateRandomString(length);
+            } while (!generatedStrings.Add(randomString));
+
+            return randomString;
+        }
+
+        private static string GenerateRandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            StringBuilder result = new StringBuilder(length);
+            for (int i = 0; i < length; i++)
+            {
+                result.Append(chars[_random.Next(chars.Length)]);
+            }
+            return result.ToString();
+        }
+
         private string GetLastname()
         {
             return _lastNames[_random.Next(_lastNames.Count)];
@@ -64,6 +91,11 @@
         {
             return _random.Next(1, 10000000);
         }
+        
+        private int GetPhoneNum()
+        {
+            return _random.Next(1000000, 10000000);
+        }
 
         private string GetAddress() 
         {
@@ -73,12 +105,16 @@
             return houseNumber + " " + street;
         }
 
-        public void GetNextAccount(out uint acctNo, out string firstName, out string lastName, out int balance)
+        public void GetNextAccount(out string password, out string firstName, out string lastName, out string email,
+            out uint phoneNumber, out string address)
         {
-            acctNo = GetAge();
+            password = GetPassword(20);
             firstName = GetFirstname();
             lastName = GetLastname();
-            balance = GetBalance();
+            email = GetEmail(firstName, lastName);
+            phoneNumber = (uint)GetPhoneNum();
+            address = GetAddress();
+
         }
 
         public int NumOfUserProfiles()
