@@ -15,37 +15,32 @@ namespace DataTierWebServer.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : Controller
-    {        
-        private readonly DBManager _context;
+    {
+        
+            private readonly DBManager _context;
 
-        public AccountController(DBManager context)
-        {
-            _context = context;
-        }
-
-        // GET: api/account
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
-        {
-            if (_context.Accounts == null)
+            public AccountController(DBManager context)
             {
-                return NotFound();
+                _context = context;
             }
-            return await _context.Accounts.ToListAsync();
-        }
 
-        // GET: api/account/5
-        [HttpGet("{acctNo}")]
-        public async Task<ActionResult<Account>> GetAccountById(int acctNo)
-        {
-            if (_context.Accounts == null)
+            // GET: api/account
+            [HttpGet]
+            public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
             {
-                return NotFound();
+
+                if (_context.Accounts == null)
+                {
+                    return NotFound();
+                }
+                return await _context.Accounts.ToListAsync();
             }
-            var account = await _context.Accounts.FindAsync(acctNo);
 
-            if (account == null)
+            // GET: api/account/5
+            [HttpGet("{acctNo}")]
+            public async Task<ActionResult<Account>> GetAccountById(uint acctNo)
             {
+
                 return NotFound();
             }
             return account;
@@ -96,6 +91,9 @@ namespace DataTierWebServer.Controllers
             return NoContent();
         }
 
+
+
+
         // PUT: api/account/1
         /* BODY -> row -> Enter new updated account details for the acctNo
         * {
@@ -111,76 +109,75 @@ namespace DataTierWebServer.Controllers
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{acctNo}")]
-        public async Task<IActionResult> PutAccount(uint acctNo, Account account)
-        {
-            if (acctNo != account.AcctNo)
+            public async Task<IActionResult> PutAccount(uint acctNo, Account account)
             {
-                return BadRequest();
+                if (acctNo != account.AcctNo)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(account).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AccountExists(acctNo))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
             }
 
-            _context.Entry(account).State = EntityState.Modified;
-
-            try
+            // POST: api/userprofile
+            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+            [HttpPost]
+            public async Task<ActionResult<Account>> PostAccount(Account account)
             {
+                if (_context.Accounts == null)
+                {
+                    return Problem("Entity set 'DBManager.Accounts'  is null.");
+                }
+
+
+                _context.Accounts.Add(account);
                 await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetAccount", new { acctNo = account.AcctNo }, account);
             }
-            catch (DbUpdateConcurrencyException)
+
+            // DELETE: api/userprofile/5
+            [HttpDelete("{acctNo}")]
+            public async Task<IActionResult> DeleteAccount(uint acctNo)
             {
-                if (!AccountExists(acctNo))
+                if (_context.Accounts == null)
                 {
                     return NotFound();
                 }
-                else
+                var account = await _context.Accounts.FindAsync(acctNo);
+                if (account == null)
                 {
-                    throw;
+                    return NotFound();
                 }
+
+                _context.Accounts.Remove(account);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
             }
 
-            return NoContent();
-        }
-
-        // POST: api/userprofile
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Account>> PostAccount(Account account)
-        {
-            if (_context.Accounts == null)
+            private bool AccountExists(uint acctNo)
             {
-                return Problem("Entity set 'DBManager.Accounts'  is null.");
+                return (_context.Accounts?.Any(e => e.AcctNo == acctNo)).GetValueOrDefault();
             }
-
-            _context.Accounts.Add(account);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAccount", new { acctNo = account.AcctNo }, account);
-        }
-
-        
-
-        // DELETE: api/userprofile/5
-        [HttpDelete("{acctNo}")]
-        public async Task<IActionResult> DeleteAccount(uint acctNo)
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-            var account = await _context.Accounts.FindAsync(acctNo);
-            if (account == null)
-            {
-                return NotFound();
-            }
-
-            _context.Accounts.Remove(account);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool AccountExists(uint acctNo)
-        {
-            return (_context.Accounts?.Any(e => e.AcctNo == acctNo)).GetValueOrDefault();
         }
     }
-}
 
