@@ -14,6 +14,8 @@ namespace DataTierWebServer.Data
 
         public DbSet<Account> Accounts { get; set; }
 
+        public DbSet<UserHistory> UserHistories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             List<UserProfile> userProfiles = new List<UserProfile>();
@@ -24,7 +26,7 @@ namespace DataTierWebServer.Data
             user.Address = "1 Street Suburb";
             user.PhoneNumber = 1234567;
             user.ProfilePictureUrl = "SomeImage";
-            user.Password = "Sajib123" ;
+            user.Password = "Sajib123";
             userProfiles.Add(user);
 
             user = new UserProfile();
