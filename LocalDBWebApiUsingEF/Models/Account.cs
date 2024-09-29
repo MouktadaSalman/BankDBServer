@@ -12,8 +12,8 @@ namespace DataTierWebServer.Models
         public uint Age { get; set; }
         public int Balance { get; set; }
         public string Address { get; set; }
-        
-        
+        public ICollection<UserHistory> History { get; set; }
+
         public Account()
         {
             AcctNo = 0;
@@ -23,6 +23,7 @@ namespace DataTierWebServer.Models
             Age = 0;
             Balance = 0;
             Address = string.Empty;
+            History = new List<UserHistory>();
         }
         public Account(uint acctNo, string firstName, string lastName,string email, uint age, int balance, string address)
         {
@@ -33,7 +34,15 @@ namespace DataTierWebServer.Models
             Age = age;
             Balance = balance;
             Address = address;
+            History = new List<UserHistory>();
         }
 
+    }
+
+    public class UserHistory
+    {
+        [Key]
+        public int transaction { get; set; }
+        public string? HistoryString { get; set; }
     }
 }

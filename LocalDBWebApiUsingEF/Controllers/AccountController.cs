@@ -40,20 +40,56 @@ namespace DataTierWebServer.Controllers
             [HttpGet("{acctNo}")]
             public async Task<ActionResult<Account>> GetAccountById(uint acctNo)
             {
-                if (_context.Accounts == null)
-                {
-                    return NotFound();
-                }
-                var account = await _context.Accounts.FindAsync(acctNo);
 
-                if (account == null)
-                    {
-                        return NotFound();
-                    } 
-
-                    return account;
-
+                return NotFound();
             }
+            return account;
+        }
+
+        [HttpGet("history/{acctNo}")]
+        public async Task<ActionResult<List<string>>> GetAccountHistory(int acctNo)
+        {
+            if (_context.Accounts == null)
+            {
+                return NotFound();
+            }
+            var account = await _context.Accounts
+                .Include(u => u.History)
+                .FirstOrDefaultAsync(u => u.AcctNo == acctNo);
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+            return Ok(account.History);
+        }
+
+        // GET: api/account/1/1000
+        [HttpPut("{acctNo}/{amount}")]
+        public async Task<ActionResult<Account>> UpdateBalance(int acctNo, int amount)
+        {
+            if (_context.Accounts == null)
+            {
+                return NotFound();
+            }
+            var account = await _context.Accounts.FindAsync(acctNo);
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+            account.Balance += amount;
+            var historyEntry = new UserHistory
+            {
+                HistoryString = $"Balance updated by {amount} on {DateTime.Now}"
+            };
+            account.History.Add(historyEntry);
+
+            _context.Entry(account).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
 
 
