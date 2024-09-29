@@ -48,7 +48,7 @@ namespace DataTierWebServer.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    AcctNo = table.Column<uint>(type: "INTEGER", nullable: false)
+                    AcctNo = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
@@ -67,9 +67,9 @@ namespace DataTierWebServer.Migrations
                 columns: new[] { "AcctNo", "Address", "Age", "Balance", "Email", "FirstName", "LastName" },
                 values: new object[,]
                 {
-                    { 1u, "1 Street Suburb", 25u, 1000, "john.doe@email.com", "John", "Doe" },
-                    { 2u, "2 Street Suburb", 30u, 2000, "jane.doe@email.com", "Jane", "Doe" },
-                    { 3u, "3 Street Suburb", 35u, 3000, "mike.smith@email.com", "Mike", "Smith" }
+                    { 1, "1 Street Suburb", 25u, 1000, "john.doe@email.com", "John", "Doe" },
+                    { 2, "2 Street Suburb", 30u, 2000, "jane.doe@email.com", "Jane", "Doe" },
+                    { 3, "3 Street Suburb", 35u, 3000, "mike.smith@email.com", "Mike", "Smith" }
                 });
         }
 
