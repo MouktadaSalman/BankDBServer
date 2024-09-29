@@ -34,7 +34,7 @@ namespace DataTierWebServer.Controllers
             return await _context.UserProfiles.ToListAsync();
         }
 
-        // GET: api/userprofile/5
+        // GET: api/userprofile/Mike
         [HttpGet("byname/{name}")]
         public async Task<ActionResult<UserProfile>> GetUserProfileByName(string name)
         {
@@ -42,7 +42,7 @@ namespace DataTierWebServer.Controllers
           {
               return NotFound();
           }
-            var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.Name == name);
+            var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.FName == name);
 
             if (userProfile == null)
             {
@@ -123,7 +123,6 @@ namespace DataTierWebServer.Controllers
               return Problem("Entity set 'DBManager.UserProfiles'  is null.");
           }
             
-
             _context.UserProfiles.Add(userProfile);
             await _context.SaveChangesAsync();
 
