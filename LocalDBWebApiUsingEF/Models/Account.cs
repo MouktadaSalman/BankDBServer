@@ -5,7 +5,7 @@ namespace DataTierWebServer.Models
     public class Account
     {
         [Key]
-        public int AcctNo { get; set; }
+        public uint AcctNo { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -25,8 +25,7 @@ namespace DataTierWebServer.Models
             Address = string.Empty;
             History = new List<UserHistory>();
         }
-
-        public Account(int acctNo, string firstName, string lastName,string email, uint age, int balance, string address)
+        public Account(uint acctNo, string firstName, string lastName,string email, uint age, int balance, string address)
         {
             AcctNo = acctNo;
             FirstName = firstName;
@@ -37,6 +36,7 @@ namespace DataTierWebServer.Models
             Address = address;
             History = new List<UserHistory>();
         }
+
     }
 
     public class UserHistory
