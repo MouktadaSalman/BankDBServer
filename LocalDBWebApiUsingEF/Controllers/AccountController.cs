@@ -32,7 +32,13 @@ namespace DataTierWebServer.Controllers
 
             if (_context.Accounts == null)
             {
-                return NotFound(new DataGenerationFailException("Accounts"));
+                var ex = new DataGenerationFailException("Accounts");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             return await _context.Accounts.ToListAsync();
         }
@@ -43,12 +49,24 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound(new DataGenerationFailException("Accounts"));
+                var ex = new DataGenerationFailException("Accounts");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             var account = await _context.Accounts.FindAsync(acctNo);
             if (account == null)
             {
-                return NotFound(new MissingAccountException($"'{acctNo}'"));
+                var ex = new MissingAccountException($"'{acctNo}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             return account;
         }        
@@ -58,7 +76,13 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound(new DataGenerationFailException("Accounts"));
+                var ex = new DataGenerationFailException("Accounts");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             var account = await _context.Accounts
                 .Include(u => u.History)
@@ -66,7 +90,13 @@ namespace DataTierWebServer.Controllers
 
             if (account == null)
             {
-                return NotFound(new MissingAccountException($"'{acctNo}'"));
+                var ex = new MissingAccountException($"'{acctNo}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             return Ok(account.History);
         }
@@ -77,13 +107,25 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound(new DataGenerationFailException("Accounts"));
+                var ex = new DataGenerationFailException("Accounts");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             var account = await _context.Accounts.FindAsync(acctNo);
 
             if (account == null)
             {
-                return NotFound(new MissingAccountException($"'{acctNo}'"));
+                var ex = new MissingAccountException($"'{acctNo}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
 
             account.Balance += amount;
@@ -123,7 +165,13 @@ namespace DataTierWebServer.Controllers
         {
             if (acctNo != account.AcctNo)
             {
-                return BadRequest(new MismatchIdException($"'{acctNo}' vs '{account.AcctNo}'"));
+                var ex = new MismatchIdException($"'{acctNo}' vs '{account.AcctNo}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return BadRequest(errorResponse);
             }
 
             _context.Entry(account).State = EntityState.Modified;
@@ -136,7 +184,13 @@ namespace DataTierWebServer.Controllers
             {
                 if (!AccountExists(acctNo))
                 {
-                    return NotFound();
+                    var ex = new MissingAccountException($"'{acctNo}'");
+                    var errorResponse = new
+                    {
+                        ErrorType = ex.GetType().Name.ToString(),
+                        ErrorMessage = ex.Message,
+                    };
+                    return NotFound(errorResponse);
                 }
                 else
                 {
@@ -154,7 +208,13 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound(new DataGenerationFailException("Accounts"));
+                var ex = new DataGenerationFailException("Accounts");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
 
 
@@ -170,12 +230,24 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound(new DataGenerationFailException("Accounts"));
+                var ex = new DataGenerationFailException("Accounts");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             var account = await _context.Accounts.FindAsync(acctNo);
             if (account == null)
             {
-                return NotFound();
+                var ex = new MissingAccountException($"'{acctNo}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
 
             _context.Accounts.Remove(account);
