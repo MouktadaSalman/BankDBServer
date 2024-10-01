@@ -129,6 +129,7 @@ namespace DataTierWebServer.Models
         public static UserProfile GetNextAccount()
         {
             UserProfile userProfile = new UserProfile();
+            ProfileImageGen profileImageGen = new ProfileImageGen();
 
             userProfile.Age = GetAge();
             userProfile.FName = GetFirstname();
@@ -138,6 +139,7 @@ namespace DataTierWebServer.Models
             userProfile.Email = GetUniqueEmail(userProfile.FName, userProfile.LName);
             userProfile.Address = GetAddress(); 
             userProfile.Password = GetUniquePassword(12);
+            userProfile.ProfileImage = profileImageGen.GetImageBytes(profileImageGen.GetIcon());
 
             return userProfile;
         }

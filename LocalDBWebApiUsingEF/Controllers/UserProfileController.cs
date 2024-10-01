@@ -30,7 +30,13 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.UserProfiles == null)
             {
-                return NotFound(new DataGenerationFailException("UserProfiles"));
+                var ex = new DataGenerationFailException("UserProfiles");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             return await _context.UserProfiles.ToListAsync();
         }
@@ -41,13 +47,25 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.UserProfiles == null)
             {
-                return NotFound(new DataGenerationFailException("UserProfiles"));
+                var ex = new DataGenerationFailException("UserProfiles");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.FName == name);
 
             if (userProfile == null)
             {
-                return NotFound(new MissingProfileException($"'{name}'"));
+                var ex = new MissingProfileException($"'{name}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
 
             return userProfile;
@@ -60,13 +78,25 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.UserProfiles == null)
             {
-                return NotFound(new DataGenerationFailException("UserProfiles"));
+                var ex = new DataGenerationFailException("UserProfiles");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.Email == email);
 
             if (userProfile == null)
             {
-                return NotFound(new MissingProfileException($"'{email}'"));
+                var ex = new MissingProfileException($"'{email}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
 
             return userProfile;
@@ -90,7 +120,13 @@ namespace DataTierWebServer.Controllers
         {
             if (id != userProfile.Id)
             {
-                return BadRequest(new MismatchIdException($"'{id}' vs '{userProfile.Id}'"));
+                var ex = new MismatchIdException($"'{id}' vs '{userProfile.Id}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return BadRequest(errorResponse);
             }
 
             _context.Entry(userProfile).State = EntityState.Modified;
@@ -103,7 +139,13 @@ namespace DataTierWebServer.Controllers
             {
                 if (!UserProfileExists(id))
                 {
-                    return NotFound(new MissingProfileException($"'{id}'"));
+                    var ex = new MissingProfileException($"'{id}'");
+                    var errorResponse = new
+                    {
+                        ErrorType = ex.GetType().Name.ToString(),
+                        ErrorMessage = ex.Message,
+                    };
+                    return NotFound(errorResponse);
                 }
                 else
                 {
@@ -121,7 +163,13 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.UserProfiles == null)
             {
-                return NotFound(new DataGenerationFailException("UserProfiles"));
+                var ex = new DataGenerationFailException("UserProfiles");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             
             _context.UserProfiles.Add(userProfile);
@@ -136,12 +184,24 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.UserProfiles == null)
             {
-                return NotFound(new DataGenerationFailException("UserProfiles"));
+                var ex = new DataGenerationFailException("UserProfiles");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
             var userProfile = await _context.UserProfiles.FindAsync(id);
             if (userProfile == null)
             {
-                return NotFound(new MissingProfileException($"'{id}'"));
+                var ex = new MissingProfileException($"'{id}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
             }
 
             _context.UserProfiles.Remove(userProfile);
