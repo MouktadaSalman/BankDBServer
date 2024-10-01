@@ -9,6 +9,7 @@ using DataTierWebServer.Models;
 using DataTierWebServer.Data;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Xml.Linq;
+using DataTierWebServer.Models.Exceptions;
 
 namespace DataTierWebServer.Controllers
 {
@@ -31,7 +32,7 @@ namespace DataTierWebServer.Controllers
 
             if (_context.Accounts == null)
             {
-                return NotFound();
+                return NotFound(new DataGenerationFailException("Accounts"));
             }
             return await _context.Accounts.ToListAsync();
         }
@@ -42,12 +43,12 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound();
+                return NotFound(new DataGenerationFailException("Accounts"));
             }
             var account = await _context.Accounts.FindAsync(acctNo);
             if (account == null)
             {
-                return NotFound();
+                return NotFound(new MissingAccountException($"'{acctNo}'"));
             }
             return account;
         }        
@@ -57,7 +58,7 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound();
+                return NotFound(new DataGenerationFailException("Accounts"));
             }
             var account = await _context.Accounts
                 .Include(u => u.History)
@@ -65,7 +66,7 @@ namespace DataTierWebServer.Controllers
 
             if (account == null)
             {
-                return NotFound();
+                return NotFound(new MissingAccountException($"'{acctNo}'"));
             }
             return Ok(account.History);
         }
@@ -76,13 +77,13 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound();
+                return NotFound(new DataGenerationFailException("Accounts"));
             }
             var account = await _context.Accounts.FindAsync(acctNo);
 
             if (account == null)
             {
-                return NotFound();
+                return NotFound(new MissingAccountException($"'{acctNo}'"));
             }
 
             account.Balance += amount;
@@ -122,7 +123,7 @@ namespace DataTierWebServer.Controllers
         {
             if (acctNo != account.AcctNo)
             {
-                return BadRequest();
+                return BadRequest(new MismatchIdException($"'{acctNo}' vs '{account.AcctNo}'"));
             }
 
             _context.Entry(account).State = EntityState.Modified;
@@ -153,7 +154,7 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return Problem("Entity set 'DBManager.Accounts'  is null.");
+                return NotFound(new DataGenerationFailException("Accounts"));
             }
 
 
@@ -169,7 +170,7 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.Accounts == null)
             {
-                return NotFound();
+                return NotFound(new DataGenerationFailException("Accounts"));
             }
             var account = await _context.Accounts.FindAsync(acctNo);
             if (account == null)
