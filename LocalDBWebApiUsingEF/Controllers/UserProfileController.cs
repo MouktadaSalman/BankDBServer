@@ -41,6 +41,37 @@ namespace DataTierWebServer.Controllers
             return await _context.UserProfiles.ToListAsync();
         }
 
+        [HttpGet("image/{id}")]
+        public async Task<IActionResult> GetUserProfileImage(int id)
+        {
+            if (_context.UserProfiles == null)
+            {
+                var ex = new DataGenerationFailException("UserProfiles");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
+            }
+
+            var userProfile = await _context.UserProfiles.FindAsync(id);
+
+            if (userProfile == null || userProfile.ProfileImage == null)
+            {
+                var ex = new MissingProfileException($"'{id}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
+            }
+
+            // Return the image as a file
+            return File(userProfile.ProfileImage, "image/jpeg"); // Adjust the content type based on your image format
+        }
+
         // GET: api/userprofile/Mike
         [HttpGet("byname/{name}")]
         public async Task<ActionResult<UserProfile>> GetUserProfileByName(string name)
