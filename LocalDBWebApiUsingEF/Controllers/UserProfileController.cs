@@ -9,6 +9,7 @@ using DataTierWebServer.Models;
 using DataTierWebServer.Data;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Xml.Linq;
+using DataTierWebServer.Models.Exceptions;
 
 namespace DataTierWebServer.Controllers
 {
@@ -27,10 +28,10 @@ namespace DataTierWebServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserProfile>>> GetUserProfile()
         {
-          if (_context.UserProfiles == null)
-          {
-              return NotFound();
-          }
+            if (_context.UserProfiles == null)
+            {
+                return NotFound(new DataGenerationFailException("UserProfiles"));
+            }
             return await _context.UserProfiles.ToListAsync();
         }
 
@@ -38,15 +39,15 @@ namespace DataTierWebServer.Controllers
         [HttpGet("byname/{name}")]
         public async Task<ActionResult<UserProfile>> GetUserProfileByName(string name)
         {
-          if (_context.UserProfiles == null)
-          {
-              return NotFound();
-          }
+            if (_context.UserProfiles == null)
+            {
+                return NotFound(new DataGenerationFailException("UserProfiles"));
+            }
             var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.FName == name);
 
             if (userProfile == null)
             {
-                return NotFound();
+                return NotFound(new MissingProfileException($"'{name}'"));
             }
 
             return userProfile;
@@ -59,13 +60,13 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.UserProfiles == null)
             {
-                return NotFound();
+                return NotFound(new DataGenerationFailException("UserProfiles"));
             }
             var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.Email == email);
 
             if (userProfile == null)
             {
-                return NotFound();
+                return NotFound(new MissingProfileException($"'{email}'"));
             }
 
             return userProfile;
@@ -84,12 +85,12 @@ namespace DataTierWebServer.Controllers
         }
         */
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutUserProfile(int id, UserProfile userProfile)
         {
             if (id != userProfile.Id)
             {
-                return BadRequest();
+                return BadRequest(new MismatchIdException($"'{id}' vs '{userProfile.Id}'"));
             }
 
             _context.Entry(userProfile).State = EntityState.Modified;
@@ -102,7 +103,7 @@ namespace DataTierWebServer.Controllers
             {
                 if (!UserProfileExists(id))
                 {
-                    return NotFound();
+                    return NotFound(new MissingProfileException($"'{id}'"));
                 }
                 else
                 {
@@ -118,10 +119,10 @@ namespace DataTierWebServer.Controllers
         [HttpPost]
         public async Task<ActionResult<UserProfile>> PostUserProfile(UserProfile userProfile)
         {
-          if (_context.UserProfiles == null)
-          {
-              return Problem("Entity set 'DBManager.UserProfiles'  is null.");
-          }
+            if (_context.UserProfiles == null)
+            {
+                return NotFound(new DataGenerationFailException("UserProfiles"));
+            }
             
             _context.UserProfiles.Add(userProfile);
             await _context.SaveChangesAsync();
@@ -135,12 +136,12 @@ namespace DataTierWebServer.Controllers
         {
             if (_context.UserProfiles == null)
             {
-                return NotFound();
+                return NotFound(new DataGenerationFailException("UserProfiles"));
             }
             var userProfile = await _context.UserProfiles.FindAsync(id);
             if (userProfile == null)
             {
-                return NotFound();
+                return NotFound(new MissingProfileException($"'{id}'"));
             }
 
             _context.UserProfiles.Remove(userProfile);
