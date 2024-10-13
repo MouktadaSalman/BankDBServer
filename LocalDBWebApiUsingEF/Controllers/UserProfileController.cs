@@ -44,33 +44,53 @@ namespace DataTierWebServer.Controllers
         [HttpGet("image/{id}")]
         public async Task<IActionResult> GetUserProfileImage(int id)
         {
+            // Check if the UserProfiles context is available
             if (_context.UserProfiles == null)
             {
                 var ex = new DataGenerationFailException("UserProfiles");
                 var errorResponse = new
                 {
-                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorType = ex.GetType().Name,
                     ErrorMessage = ex.Message,
                 };
                 return NotFound(errorResponse);
             }
 
+            // Find the user profile by ID
             var userProfile = await _context.UserProfiles.FindAsync(id);
 
-            if (userProfile == null || userProfile.ProfileImage == null)
+            // Check if the user profile exists and if a profile image is specified
+            if (userProfile == null || string.IsNullOrWhiteSpace(userProfile.ProfilePictureUrl))
             {
                 var ex = new MissingProfileException($"'{id}'");
                 var errorResponse = new
                 {
-                    ErrorType = ex.GetType().Name.ToString(),
+                    ErrorType = ex.GetType().Name,
+                    ErrorMessage = ex.Message,
+                };
+                return NotFound(errorResponse);
+            }
+
+            // Construct the file path
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files", userProfile.ProfilePictureUrl);
+
+            // Check if the file exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                var ex = new MissingProfileException($"Profile image not found for user '{id}'");
+                var errorResponse = new
+                {
+                    ErrorType = ex.GetType().Name,
                     ErrorMessage = ex.Message,
                 };
                 return NotFound(errorResponse);
             }
 
             // Return the image as a file
-            return File(userProfile.ProfileImage, "image/jpeg"); // Adjust the content type based on your image format
+            var imageFile = await System.IO.File.ReadAllBytesAsync(filePath);
+            return File(imageFile, "image/png"); // Adjust the content type based on your image format
         }
+
 
         // GET: api/userprofile/Mike
         [HttpGet("byname/{name}")]

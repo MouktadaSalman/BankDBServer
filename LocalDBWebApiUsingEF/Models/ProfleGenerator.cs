@@ -45,6 +45,12 @@ namespace DataTierWebServer.Models
             "Long", "Ross", "Foster", "Jimenez"
         };
 
+        private static readonly List<string> _avatarIcons = new List<string>
+        {
+            "astronaut.png", "bear.png", "cat.png", "chicken.png", "dog.png", "gamer.png", "meerkat.png",
+            "panda.png", "rabbit.png"
+        };
+
         private static string GetFirstname()
         {
             return _firstNames[_random.Next(_firstNames.Count)];
@@ -126,10 +132,14 @@ namespace DataTierWebServer.Models
             return result.ToString();
         }
 
+        private static string GetRandomAvatar()
+        {
+            return _avatarIcons[_random.Next(_avatarIcons.Count)];
+        }
+
         public static UserProfile GetNextAccount()
         {
             UserProfile userProfile = new UserProfile();
-            ProfileImageGen profileImageGen = new ProfileImageGen();
 
             userProfile.Age = GetAge();
             userProfile.FName = GetFirstname();
@@ -139,7 +149,7 @@ namespace DataTierWebServer.Models
             userProfile.Email = GetUniqueEmail(userProfile.FName, userProfile.LName);
             userProfile.Address = GetAddress(); 
             userProfile.Password = GetUniquePassword(12);
-            userProfile.ProfileImage = profileImageGen.GetImageBytes(profileImageGen.GetIcon());
+            userProfile.ProfilePictureUrl = GetRandomAvatar();
 
             return userProfile;
         }
